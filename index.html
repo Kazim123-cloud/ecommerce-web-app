@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopNest – E-Commerce Store</title>
+  <link rel="stylesheet" href="src/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand">
+    <span class="brand-icon">🛍️</span>
+    <span class="brand-name">ShopNest</span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="#" class="nav-link active" onclick="showPage('home')">Home</a>
+    <a href="#" class="nav-link" onclick="showPage('products')">Products</a>
+    <a href="#" class="nav-link" onclick="showPage('orders')" id="ordersLink" style="display:none">My Orders</a>
+    <a href="#" class="nav-link" onclick="showPage('admin')" id="adminLink" style="display:none">Admin Panel</a>
+  </div>
+  <div class="nav-actions">
+    <button class="cart-btn" onclick="toggleCart()">
+      🛒 Cart <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+    <div id="authSection">
+      <button class="btn btn-outline" onclick="showPage('login')">Login</button>
+    </div>
+    <div id="userSection" style="display:none">
+      <span class="user-greeting" id="userGreeting"></span>
+      <button class="btn btn-outline" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PAGES -->
+<main id="app">
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">New Arrivals 2026</div>
+        <h1 class="hero-title">Shop Smart.<br/>Live Better.</h1>
+        <p class="hero-sub">Discover premium products across Electronics, Fashion, Home & more — curated just for you.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" onclick="showPage('products')">Browse Products</button>
+          <button class="btn btn-ghost btn-lg" onclick="showPage('login')">Sign In →</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-inner">
+            <span class="big-emoji">📱</span>
+            <p>Latest Gadgets</p>
+          </div>
+        </div>
+        <div class="hero-card offset">
+          <div class="hero-card-inner">
+            <span class="big-emoji">👗</span>
+            <p>Fashion Picks</p>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-inner">
+            <span class="big-emoji">🏠</span>
+            <p>Home Decor</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature-item"><span>🚚</span><p>Free Shipping over ₹499</p></div>
+      <div class="feature-item"><span>🔄</span><p>Easy 30-Day Returns</p></div>
+      <div class="feature-item"><span>🔒</span><p>Secure Payments</p></div>
+      <div class="feature-item"><span>⭐</span><p>Verified Reviews</p></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Featured Products</h2>
+      <div class="products-grid" id="featuredGrid"></div>
+    </section>
+  </div>
+
+  <!-- PRODUCTS PAGE -->
+  <div id="page-products" class="page">
+    <div class="page-header">
+      <h2>All Products</h2>
+      <div class="filter-bar">
+        <select id="categoryFilter" onchange="filterProducts()">
+          <option value="all">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Home">Home</option>
+          <option value="Books">Books</option>
+        </select>
+        <select id="sortFilter" onchange="filterProducts()">
+          <option value="default">Sort By</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+        <input type="search" id="searchInput" placeholder="Search products..." oninput="filterProducts()"/>
+      </div>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div id="page-detail" class="page">
+    <div id="productDetail"></div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="page-login" class="page">
+    <div class="auth-container">
+      <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <p class="auth-sub">Sign in to your account</p>
+
+        <div class="demo-accounts">
+          <p><strong>Demo Accounts:</strong></p>
+          <button class="demo-btn" onclick="fillDemo('admin@shopnest.com','admin123')">👑 Admin Login</button>
+          <button class="demo-btn" onclick="fillDemo('user@shopnest.com','user123')">👤 User Login</button>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter email"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password"/>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="login()">Sign In</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="showPage('register')">Register</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER PAGE -->
+  <div id="page-register" class="page">
+    <div class="auth-container">
+      <div class="auth-card">
+        <h2>Create Account</h2>
+        <p class="auth-sub">Join ShopNest today</p>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="Your full name"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="Your email"/>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="Create password"/>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="register()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="showPage('login')">Sign In</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT PAGE -->
+  <div id="page-checkout" class="page">
+    <div class="checkout-container">
+      <h2>Checkout</h2>
+      <div class="checkout-grid">
+        <div class="checkout-form">
+          <h3>Shipping Details</h3>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="shipName" placeholder="Full Name"/>
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input type="text" id="shipAddress" placeholder="Street Address"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" id="shipCity" placeholder="City"/>
+            </div>
+            <div class="form-group">
+              <label>PIN Code</label>
+              <input type="text" id="shipPin" placeholder="PIN Code"/>
+            </div>
+          </div>
+          <h3 style="margin-top:24px">Payment</h3>
+          <div class="payment-options">
+            <label class="pay-opt"><input type="radio" name="payment" value="cod" checked/> Cash on Delivery</label>
+            <label class="pay-opt"><input type="radio" name="payment" value="upi"/> UPI</label>
+            <label class="pay-opt"><input type="radio" name="payment" value="card"/> Credit/Debit Card</label>
+          </div>
+          <button class="btn btn-primary btn-full" style="margin-top:24px" onclick="placeOrder()">Place Order</button>
+        </div>
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div id="checkoutItems"></div>
+          <div class="summary-totals" id="summaryTotals"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDERS PAGE -->
+  <div id="page-orders" class="page">
+    <div class="section">
+      <h2 class="section-title">My Orders</h2>
+      <div id="ordersList"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN PAGE -->
+  <div id="page-admin" class="page">
+    <div class="section">
+      <h2 class="section-title">Admin Panel</h2>
+      <div class="admin-tabs">
+        <button class="tab-btn active" onclick="switchAdminTab('products')">Products</button>
+        <button class="tab-btn" onclick="switchAdminTab('orders')">All Orders</button>
+      </div>
+      <div id="adminProducts" class="admin-panel"></div>
+      <div id="adminOrders" class="admin-panel" style="display:none"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 ShopNest. Built with ❤️ by <strong>[Your Name]</strong> | Thiranex Internship – Task 3</p>
+</footer>
+
+<script src="src/data.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>
