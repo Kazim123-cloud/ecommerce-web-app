@@ -75,8 +75,8 @@ ecommerce-web-app/
 
 ## 👨‍💻 Author
 
-**[Your Name]**  
-B.Tech CSE | Sharda University  
+**[Kazim Zaffar Kashoo]**  
+B.Tech CSE AI ML| Sharda University  
 Thiranex Full-Stack Web Development Internship – Summer 2026
 
 ---
